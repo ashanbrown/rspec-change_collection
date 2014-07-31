@@ -26,15 +26,13 @@ module RSpec
 
           if actual_before.respond_to?(:to_ary)
             @missing_original_items = extract_items(@expected_to_exclude) - actual_before
-            @missing_original_items += extract_procs(@expected_to_exclude).
-              reject { |proc| actual_before.any? { |item| proc.call(item) }}
+            @missing_original_items += reject_procs(actual_before, @expected_to_exclude)
             @extra_original_items = select_items(actual_before, @expected_to_include) & actual_before
           end
 
           if actual_after.respond_to?(:to_ary)
             @missing_final_items = extract_items(@expected_to_include) - actual_after
-            @missing_final_items += extract_procs(@expected_to_include).
-              reject { |proc| actual_after.any? { |item| proc.call(item) }}
+            @missing_final_items += reject_procs(actual_after, @expected_to_include)
             @extra_final_items = select_items(actual_after, @expected_to_exclude) & actual_after
           end
         end
@@ -119,8 +117,8 @@ module RSpec
         rules.reject { |rule| callable?(rule) }.flatten(1)
       end
 
-      def extract_procs(rules)
-        rules.select { |rule| callable?(rule) }
+      def reject_procs(items, rules)
+        rules.select { |rule| callable?(rule) }.reject { |proc| items.any? { |item| proc.call(item) }}
       end
 
       def select_items(items, rules)
