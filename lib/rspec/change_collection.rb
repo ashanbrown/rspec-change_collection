@@ -1,7 +1,8 @@
 require 'rspec/change_collection/version'
 require 'rspec/core'
+require 'rspec/expectations'
 
-module RSpec
+module RSpec::Matchers
   module ChangeCollection
     class Change < RSpec::Matchers::BuiltIn::Change
       def initialize(receiver=nil, message=nil, &block)
@@ -155,18 +156,17 @@ module RSpec
     end
   end
 
-  module Matchers
-    def change_collection(receiver=nil, message=nil, &block)
-      RSpec::ChangeCollection::Change.new(receiver, message, &block)
-    end
-
-    alias_method :change, :change_collection
+  def change_with_collection(receiver=nil, message=nil, &block)
+    RSpec::Matchers::ChangeCollection::Change.new(receiver, message, &block)
   end
+
+  alias_method :change_without_collection, :change_with_collection
+  alias_method :change, :change_with_collection
 end
 
 RSpec.configure do |rspec|
-  rspec.extend RSpec::ChangeCollection
+  rspec.extend RSpec::Matchers::ChangeCollection
   rspec.backtrace_exclusion_patterns << %r(/lib/rspec/change_collection)
 end
 
-RSpec::SharedContext.send(:include, RSpec::ChangeCollection)
+RSpec::SharedContext.send(:include, RSpec::Matchers::ChangeCollection)
