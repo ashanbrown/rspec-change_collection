@@ -6,7 +6,7 @@ require 'rspec/change_collection/version'
 Gem::Specification.new do |spec|
   spec.name          = "rspec-change_collection"
   spec.version       = RSpec::ChangeCollection::VERSION
-  spec.authors       = ["Andrew Brown"]
+  spec.authors       = ["Andrew S. Brown"]
   spec.email         = ["andrew@dontfidget.com"]
   spec.description   = %q{RSpec extension gem for attribute matching}
   spec.summary       = %q{Provides "change_collection" method formally part of rspec-core}
